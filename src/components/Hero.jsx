@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 
+const base = import.meta.env.BASE_URL
+
 const heroImages = [
-  { src: '/images/hero/ice gems.png', alt: 'Iced Gems', top: '10%', left: '6%', rotate: -5, size: 'w-28 md:w-40' },
-  { src: '/images/hero/chocolate wafer.png', alt: 'Chocolate Wafers', top: '8%', right: '5%', rotate: 4, size: 'w-32 md:w-44' },
-  { src: '/images/hero/pineapple tart.png', alt: 'Pineapple Tart', bottom: '20%', left: '10%', rotate: 3, size: 'w-24 md:w-36' },
-  { src: '/images/hero/oreo.png', alt: 'Oreo', bottom: '18%', right: '8%', rotate: -4, size: 'w-24 md:w-32' },
+  { src: `${base}images/hero/heart_shape_butter_cookie.png`, alt: 'Heart Shape Butter Cookie', top: '24%', left: '22%', rotate: -12, size: 'w-20 md:w-28', zIndex: 11 },
+  { src: `${base}images/hero/ice gems.png`, alt: 'Iced Gems', top: '10%', left: '6%', rotate: -5, size: 'w-28 md:w-40' },
+  { src: `${base}images/hero/chocolate wafer.png`, alt: 'Chocolate Wafers', top: '8%', right: '5%', rotate: 4, size: 'w-32 md:w-44' },
+  { src: `${base}images/hero/pineapple tart.png`, alt: 'Pineapple Tart', bottom: '20%', left: '10%', rotate: 3, size: 'w-24 md:w-36' },
+  { src: `${base}images/hero/oreo.png`, alt: 'Oreo', bottom: '18%', right: '8%', rotate: -4, size: 'w-24 md:w-32' },
 ]
 
 export default function Hero() {
@@ -33,6 +36,7 @@ export default function Hero() {
             right: img.right,
             bottom: img.bottom,
             rotate: `${img.rotate}deg`,
+            zIndex: img.zIndex || 1,
             transitionDelay: `${0.3 + i * 0.25}s`,
           }}
           loading="eager"

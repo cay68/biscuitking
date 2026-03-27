@@ -1,5 +1,20 @@
 import { useState, useRef, useEffect } from 'react'
 
+// Simple markdown → React: handles **bold**, *italic*, and newlines
+function renderMarkdown(text) {
+  // Split by **bold** and *italic* patterns
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={i}>{part.slice(1, -1)}</em>
+    }
+    return part
+  })
+}
+
 const suggestionPills = [
   "I'm a 90s kid, what should I get?",
   "Gift box under $30",
@@ -12,10 +27,30 @@ const welcomeMessage = {
   content: "Hi, I'm Biscuit King! \ud83d\udc4b Your guide to Singapore's best old-school snacks. Whether you're hunting for childhood favourites or looking for the perfect gift tin, I'm here to help. What are you looking for today?",
 }
 
+function TypingIndicator() {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-start', gap: 10, alignItems: 'flex-end' }}>
+      <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--red-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>
+        👑
+      </div>
+      <div
+        className="rounded-2xl rounded-bl-sm bg-[var(--yellow-50)]"
+        style={{ padding: '14px 18px', display: 'flex', gap: 4, alignItems: 'center' }}
+      >
+        <span className="typing-dot" style={{ animationDelay: '0ms' }} />
+        <span className="typing-dot" style={{ animationDelay: '150ms' }} />
+        <span className="typing-dot" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  )
+}
+
 export default function ChatBot() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([welcomeMessage])
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPills, setShowPills] = useState(true)
   const [showTooltip, setShowTooltip] = useState(true)
   const bottomRef = useRef(null)
 
@@ -26,23 +61,39 @@ export default function ChatBot() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, isLoading])
 
-  const sendMessage = (text) => {
-    if (!text.trim()) return
+  const sendMessage = async (text) => {
+    if (!text.trim() || isLoading) return
     const userMsg = { role: 'user', content: text.trim() }
+
     setMessages((prev) => [...prev, userMsg])
     setInput('')
+    setShowPills(false)
+    setIsLoading(true)
 
-    setTimeout(() => {
+    try {
+      // Build conversation history for API (exclude the static welcome message)
+      const apiMessages = [...messages.slice(1), userMsg].map(({ role, content }) => ({ role, content }))
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: apiMessages }),
+      })
+
+      if (!res.ok) throw new Error('API error')
+
+      const data = await res.json()
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }])
+    } catch {
       setMessages((prev) => [
         ...prev,
-        {
-          role: 'assistant',
-          content: "Great question! Once I'm connected to our product database, I'll be able to recommend the perfect nostalgic treats for you. Stay tuned! \ud83c\udf6a",
-        },
+        { role: 'assistant', content: "Sorry, I'm having trouble connecting right now. Please try again in a moment!" },
       ])
-    }, 800)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -78,14 +129,13 @@ export default function ChatBot() {
       {/* Chat panel */}
       {open && (
         <div className="fixed bottom-6 right-6 z-[900] w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] flex flex-col rounded-2xl shadow-2xl overflow-hidden bg-white">
-          {/* Header with crown + persona + online status */}
+          {/* Header */}
           <div
             className="shrink-0"
             style={{ background: 'var(--red-400)', padding: '14px 20px' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                {/* Crown icon */}
                 <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
                   👑
                 </div>
@@ -131,39 +181,42 @@ export default function ChatBot() {
                       ? 'rounded-br-sm bg-[var(--red-50)]'
                       : 'rounded-bl-sm bg-[var(--yellow-50)]'
                   }`}
-                  style={{ padding: '14px 18px' }}
+                  style={{ padding: '14px 18px', whiteSpace: 'pre-wrap' }}
                 >
-                  {msg.content}
+                  {msg.role === 'assistant' ? renderMarkdown(msg.content) : msg.content}
                 </div>
               </div>
             ))}
+            {isLoading && <TypingIndicator />}
             <div ref={bottomRef} />
             </div>
           </div>
 
           {/* Suggestion pills + input area */}
           <div className="shrink-0 border-t border-[var(--red-50)] bg-white">
-            {/* Pills */}
-            <div style={{ padding: '10px 16px 4px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {suggestionPills.map((pill) => (
-                <button
-                  key={pill}
-                  onClick={() => sendMessage(pill)}
-                  className="hover:bg-[var(--red-100)] transition-colors"
-                  style={{
-                    fontSize: 12,
-                    padding: '5px 12px',
-                    borderRadius: 9999,
-                    background: 'var(--red-50)',
-                    color: 'var(--red-500)',
-                    border: '1px solid var(--red-200)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {pill}
-                </button>
-              ))}
-            </div>
+            {/* Pills — shown until first message sent */}
+            {showPills && (
+              <div style={{ padding: '10px 16px 4px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {suggestionPills.map((pill) => (
+                  <button
+                    key={pill}
+                    onClick={() => sendMessage(pill)}
+                    className="hover:bg-[var(--red-100)] transition-colors"
+                    style={{
+                      fontSize: 12,
+                      padding: '5px 12px',
+                      borderRadius: 9999,
+                      background: 'var(--red-50)',
+                      color: 'var(--red-500)',
+                      border: '1px solid var(--red-200)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {pill}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Input */}
             <div style={{ padding: '8px 16px 12px', display: 'flex', gap: 8 }}>
@@ -173,6 +226,7 @@ export default function ChatBot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
                 placeholder="Ask about snacks..."
+                disabled={isLoading}
                 style={{
                   flex: 1,
                   padding: '10px 16px',
@@ -181,10 +235,12 @@ export default function ChatBot() {
                   border: '1px solid var(--red-100)',
                   outline: 'none',
                   background: 'var(--off-white)',
+                  opacity: isLoading ? 0.6 : 1,
                 }}
               />
               <button
                 onClick={() => sendMessage(input)}
+                disabled={isLoading}
                 className="hover:bg-[var(--red-500)] transition-colors"
                 style={{
                   width: 40,
@@ -194,10 +250,11 @@ export default function ChatBot() {
                   background: 'var(--red-400)',
                   color: 'white',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: isLoading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  opacity: isLoading ? 0.6 : 1,
                 }}
                 aria-label="Send message"
               >
@@ -209,6 +266,21 @@ export default function ChatBot() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes typing-bounce {
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+          30% { transform: translateY(-4px); opacity: 1; }
+        }
+        .typing-dot {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--muted);
+          animation: typing-bounce 1.2s infinite;
+        }
+      `}</style>
     </>
   )
 }

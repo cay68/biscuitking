@@ -1,12 +1,14 @@
 import { useInView } from '../hooks/useInView'
 
+const base = import.meta.env.BASE_URL
+
 const products = [
-  { name: 'Iced Gems', category: 'Biscuits', price: 3.50, era: '80s', img: '/images/hero/ice gems.png' },
-  { name: 'Pineapple Tarts', category: 'Biscuits', price: 5.50, era: '80s', img: '/images/hero/pineapple tart.png' },
-  { name: 'Chocolate Wafers', category: 'Biscuits', price: 4.00, era: '90s', img: '/images/hero/chocolate wafer.png' },
-  { name: 'Oreo', category: 'Biscuits', price: 3.80, era: '90s', img: '/images/hero/oreo.png' },
-  { name: 'Iced Gems', category: 'Biscuits', price: 3.50, era: '80s', img: '/images/hero/ice gems.png' },
-  { name: 'Pineapple Tarts', category: 'Biscuits', price: 5.50, era: '80s', img: '/images/hero/pineapple tart.png' },
+  { name: 'Iced Gems', category: 'Biscuits', price: 3.50, era: '80s', img: `${base}images/hero/ice gems.png` },
+  { name: 'Pineapple Tarts', category: 'Biscuits', price: 5.50, era: '80s', img: `${base}images/hero/pineapple tart.png` },
+  { name: 'Chocolate Wafers', category: 'Biscuits', price: 4.00, era: '90s', img: `${base}images/hero/chocolate wafer.png` },
+  { name: 'Oreo', category: 'Biscuits', price: 3.80, era: '90s', img: `${base}images/hero/oreo.png` },
+  { name: 'Iced Gems', category: 'Biscuits', price: 3.50, era: '80s', img: `${base}images/hero/ice gems.png` },
+  { name: 'Pineapple Tarts', category: 'Biscuits', price: 5.50, era: '80s', img: `${base}images/hero/pineapple tart.png` },
 ]
 
 export default function FeaturedProducts() {
@@ -70,7 +72,7 @@ export default function FeaturedProducts() {
 
         {/* View all link */}
         <div className={`text-center mt-10 fade-up ${visible ? 'visible' : ''}`} style={{ transitionDelay: '0.5s' }}>
-          <a href="#" className="text-[var(--red-500)] hover:text-[var(--red-600)] font-semibold transition-colors">
+          <a href="/shop" className="text-[var(--red-500)] hover:text-[var(--red-600)] font-semibold transition-colors">
             View All Products &rarr;
           </a>
         </div>

@@ -1,11 +1,13 @@
 import { useInView } from '../hooks/useInView'
 
+const base = import.meta.env.BASE_URL
+
 const publishers = [
-  { name: 'TidbitsMag', logo: '/images/press/tidbits mag logo.png' },
-  { name: 'The Straits Times', logo: '/images/press/straits times logo.png' },
-  { name: 'The Smart Local', logo: '/images/press/smart local logo.png' },
-  { name: 'Seth Lui', logo: '/images/press/seth lui logo.png' },
-  { name: 'Tripadvisor', logo: '/images/press/trip adivisor logo.png' },
+  { name: 'TidbitsMag', logo: `${base}images/press/tidbits mag logo.png` },
+  { name: 'The Straits Times', logo: `${base}images/press/straits times logo.png` },
+  { name: 'The Smart Local', logo: `${base}images/press/smart local logo.png` },
+  { name: 'Seth Lui', logo: `${base}images/press/seth lui logo.png` },
+  { name: 'Tripadvisor', logo: `${base}images/press/trip adivisor logo.png` },
 ]
 
 export default function FeaturedBy() {
@@ -62,7 +64,7 @@ export default function FeaturedBy() {
           {/* Right — attribution with logo */}
           <div style={{ paddingLeft: 48, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
             <img
-              src="/images/press/tidbits mag logo.png"
+              src={`${base}images/press/tidbits mag logo.png`}
               alt="TidbitsMag"
               style={{ height: 28, width: 'auto', objectFit: 'contain', marginBottom: 16, alignSelf: 'flex-start' }}
             />

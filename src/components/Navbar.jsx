@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+
+const base = import.meta.env.BASE_URL
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+  const isShop = location.pathname === '/shop'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -11,9 +16,9 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { label: 'Shop', href: '#featured' },
-    { label: 'Our Story', href: '#story' },
-    { label: 'Visit Us', href: '#visit' },
+    { label: 'Shop', href: '/shop', isRoute: true },
+    { label: 'Our Story', href: isShop ? '/#story' : '#story' },
+    { label: 'Visit Us', href: isShop ? '/#visit' : '#visit' },
   ]
 
   return (
@@ -27,34 +32,44 @@ export default function Navbar() {
     >
       <div className="h-full flex items-center justify-between" style={{ paddingLeft: 32, paddingRight: 32 }}>
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2 shrink-0" style={{ marginLeft: 12 }}>
+        <Link to="/" className="flex items-center gap-2 shrink-0" style={{ marginLeft: 12 }}>
           <img
-            src="/images/logo.png"
+            src={`${base}images/logo.png`}
             alt="Biscuit King"
             className="h-10 w-auto"
           />
-        </a>
+        </Link>
 
         {/* Desktop Nav — rounded border pill */}
         <div
           className="hidden md:flex items-center gap-6"
           style={{ border: '1.5px solid var(--red-200)', borderRadius: 9999, padding: '8px 28px' }}
         >
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm font-medium uppercase tracking-wider text-[var(--black)] hover:text-[var(--red-500)] transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.isRoute ? (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-sm font-medium uppercase tracking-wider text-[var(--black)] hover:text-[var(--red-500)] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium uppercase tracking-wider text-[var(--black)] hover:text-[var(--red-500)] transition-colors"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </div>
 
         {/* Right side */}
         <div className="hidden md:flex items-center" style={{ marginRight: 12 }}>
-          <a
-            href="#featured"
+          <Link
+            to="/shop"
             className="hover:bg-[var(--red-50)] transition-colors"
             style={{
               display: 'flex',
@@ -76,7 +91,7 @@ export default function Navbar() {
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
             Order Now
-          </a>
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -109,23 +124,34 @@ export default function Navbar() {
               <path d="M18 6L6 18M6 6l12 12"/>
             </svg>
           </button>
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="text-[var(--black)] text-2xl font-medium uppercase tracking-wider hover:text-[var(--red-500)] transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
-          <a
-            href="#featured"
+          {navLinks.map((link) =>
+            link.isRoute ? (
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-[var(--black)] text-2xl font-medium uppercase tracking-wider hover:text-[var(--red-500)] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-[var(--black)] text-2xl font-medium uppercase tracking-wider hover:text-[var(--red-500)] transition-colors"
+              >
+                {link.label}
+              </a>
+            )
+          )}
+          <Link
+            to="/shop"
             onClick={() => setMenuOpen(false)}
             className="mt-4 bg-[var(--red-400)] text-white text-lg font-medium uppercase px-8 py-3 rounded-full"
           >
             Order Now
-          </a>
+          </Link>
         </div>
       )}
     </nav>

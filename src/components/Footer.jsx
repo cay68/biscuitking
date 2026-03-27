@@ -1,3 +1,5 @@
+const base = import.meta.env.BASE_URL
+
 export default function Footer() {
   const links = [
     { label: 'Shop', href: '#featured' },
@@ -12,7 +14,7 @@ export default function Footer() {
     <footer style={{ background: 'var(--red-50)', padding: '48px 48px 32px' }}>
       <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
         {/* Logo */}
-        <img src="/images/logo.png" alt="Biscuit King" style={{ height: 48, margin: '0 auto 12px' }} />
+        <img src={`${base}images/logo.png`} alt="Biscuit King" style={{ height: 48, margin: '0 auto 12px' }} />
 
         <p style={{ color: 'var(--muted)', fontSize: 16, marginBottom: 40 }}>
           Singapore&rsquo;s nostalgia, delivered.

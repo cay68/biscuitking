@@ -1,13 +1,15 @@
 import { useInView } from '../hooks/useInView'
 
+const base = import.meta.env.BASE_URL
+
 const images = [
-  { src: '/images/gallery/gallery 1.jpg', alt: 'Biscuit King snack shelves' },
-  { src: '/images/gallery/gallery 2.jpg', alt: 'Biscuit King snacks' },
-  { src: '/images/gallery/gallery 3.jpg', alt: 'Retro toys and games' },
-  { src: '/images/gallery/gallery 4.jpg', alt: 'Traditional biscuit tins' },
-  { src: '/images/gallery/gallery 5.jpg', alt: 'Biscuit King storefront' },
-  { src: '/images/gallery/gallery 6.jpg', alt: 'Biscuit King treats' },
-  { src: '/images/gallery/gallery 7.jpg', alt: 'Biscuit King collection' },
+  { src: `${base}images/gallery/gallery 1.jpg`, alt: 'Biscuit King snack shelves' },
+  { src: `${base}images/gallery/gallery 2.jpg`, alt: 'Biscuit King snacks' },
+  { src: `${base}images/gallery/gallery 3.jpg`, alt: 'Retro toys and games' },
+  { src: `${base}images/gallery/gallery 4.jpg`, alt: 'Traditional biscuit tins' },
+  { src: `${base}images/gallery/gallery 5.jpg`, alt: 'Biscuit King storefront' },
+  { src: `${base}images/gallery/gallery 6.jpg`, alt: 'Biscuit King treats' },
+  { src: `${base}images/gallery/gallery 7.jpg`, alt: 'Biscuit King collection' },
 ]
 
 export default function Gallery() {

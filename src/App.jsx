@@ -1,3 +1,4 @@
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
@@ -8,11 +9,12 @@ import StoreInfo from './components/StoreInfo'
 import Gallery from './components/Gallery'
 import Footer from './components/Footer'
 import ChatBot from './components/ChatBot'
+import Shop from './pages/Shop'
+import Admin from './pages/Admin'
 
-export default function App() {
+function Landing() {
   return (
     <>
-      <Navbar />
       <main>
         <Hero />
         <Marquee />
@@ -23,7 +25,23 @@ export default function App() {
         <Gallery />
       </main>
       <Footer />
-      <ChatBot />
+    </>
+  )
+}
+
+export default function App() {
+  const location = useLocation()
+  const isAdmin = location.pathname === '/admin'
+
+  return (
+    <>
+      {!isAdmin && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+      {!isAdmin && <ChatBot />}
     </>
   )
 }

@@ -1,6 +1,8 @@
 import { useRef, useEffect } from 'react'
 import { useInView } from '../hooks/useInView'
 
+const base = import.meta.env.BASE_URL
+
 export default function OurStory() {
   const [ref, visible] = useInView()
   const videoRef = useRef(null)
@@ -56,7 +58,7 @@ export default function OurStory() {
               objectFit: 'cover',
             }}
           >
-            <source src="/videos/our story video.mp4" type="video/mp4" />
+            <source src={`${base}videos/our story video.mp4`} type="video/mp4" />
           </video>
         </div>
       </div>

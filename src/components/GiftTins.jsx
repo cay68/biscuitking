@@ -1,5 +1,7 @@
 import { useInView } from '../hooks/useInView'
 
+const base = import.meta.env.BASE_URL
+
 export default function GiftTins() {
   const [ref, visible] = useInView()
 
@@ -15,16 +17,16 @@ export default function GiftTins() {
             {/* Grid of snack images to simulate a gift tin */}
             <div className="grid grid-cols-2 gap-4 p-8 w-full h-full">
               <div className="flex items-center justify-center rounded-2xl p-4" style={{ background: 'var(--red-50)' }}>
-                <img src="/images/hero/ice gems.png" alt="Iced Gems" className="w-full h-full object-contain" loading="lazy" />
+                <img src={`${base}images/hero/ice gems.png`} alt="Iced Gems" className="w-full h-full object-contain" loading="lazy" />
               </div>
               <div className="flex items-center justify-center rounded-2xl p-4" style={{ background: 'var(--red-50)' }}>
-                <img src="/images/hero/pineapple tart.png" alt="Pineapple Tart" className="w-full h-full object-contain" loading="lazy" />
+                <img src={`${base}images/hero/pineapple tart.png`} alt="Pineapple Tart" className="w-full h-full object-contain" loading="lazy" />
               </div>
               <div className="flex items-center justify-center rounded-2xl p-4" style={{ background: 'var(--red-50)' }}>
-                <img src="/images/hero/chocolate wafer.png" alt="Chocolate Wafers" className="w-full h-full object-contain" loading="lazy" />
+                <img src={`${base}images/hero/chocolate wafer.png`} alt="Chocolate Wafers" className="w-full h-full object-contain" loading="lazy" />
               </div>
               <div className="flex items-center justify-center rounded-2xl p-4" style={{ background: 'var(--red-50)' }}>
-                <img src="/images/hero/oreo.png" alt="Oreo" className="w-full h-full object-contain" loading="lazy" />
+                <img src={`${base}images/hero/oreo.png`} alt="Oreo" className="w-full h-full object-contain" loading="lazy" />
               </div>
             </div>
           </div>
